@@ -25,33 +25,30 @@ print(chain)
 
 print("Result part 1: ", differences[1] * differences[3])
 
-
-prev_jolt = 0
-num_arrangements = 1
-for i in range(len(chain)-1):
-    if i+1 < len(chain) and chain[i+1] <= prev_jolt + 3:
-        if i+2 < len(chain) and chain[i+2] <= prev_jolt + 3:
-            num_arrangements *= 3  # both can be removed, so in total 3 combinations, not 4 because of the next iteration
-            print(chain[i], chain[i+1])
-        else:
-            num_arrangements *= 2  #only this can be removed, so in total 2 combinations
-            print(chain[i])
-    prev_jolt = chain[i]
+prev_results = {}
+def get_arrangements(chain, i, prev_jolt):
+    if i+1 < len(chain):
+        total_arrangements = 0
         
-
-print(num_arrangements)
-# effective_jolts = 0
-# chain = []
-# num_arrangements = 1
-# for i, jolts in enumerate(data):
-    # if jolts <= effective_jolts + 3:
-
-        # if i+1 < len(data) and data[i+1] <= effective_jolts + 3:
-            # num_arrangements *= 2 
-        # if i+2 < len(data) and data[i+2] <= effective_jolts + 3:
-            # num_arrangements *= 2 
-
-        # chain.append(jolts)
-        # effective_jolts = jolts
+        if "(%d,%d)"%(i+1, chain[i]) in prev_results:   
+            total_arrangements += prev_results["(%d,%d)"%(i+1, chain[i])]
+        else:
+            arrangements = get_arrangements(chain, i+1, chain[i])
+            prev_results["(%d,%d)"%(i+1, chain[i])] = arrangements
+            total_arrangements += arrangements
+    
+        if chain[i+1] <= prev_jolt + 3:
+            if "(%d,%d)"%(i+1, prev_jolt) in prev_results:
+                total_arrangements += prev_results["(%d,%d)"%(i+1, prev_jolt)]
+            else:
+                arrangements = get_arrangements(chain, i+1, prev_jolt)
+                prev_results["(%d,%d)"%(i+1, prev_jolt)] = arrangements
+                total_arrangements += arrangements
+        return total_arrangements
             
-# print(num_arrangements)
+    return 1
+    
+
+
+num_arrangements = get_arrangements(chain, 0, 0)
+print("Result part 1: ",num_arrangements)
