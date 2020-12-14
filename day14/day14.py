@@ -45,14 +45,14 @@ for line in lines:
         address = int(line[4:-1].split(']')[0])
         value = int(line[4:-1].split(']')[1][3:])
 
-        # apply binary mask to value
+        # apply binary address to value
         address_bin = np.asarray(list(format(address, "036b")))
         address_bin[mask != '0'] = mask[mask != '0']
         
         num_floats = np.count_nonzero(address_bin == 'X')
         permutations = list(map(list, product([0, 1], repeat=num_floats)))
         
-        
+        # write addresses for all permutations
         for permutation in permutations:
             address_bin_copy = address_bin.copy()
             address_bin_copy[address_bin_copy == 'X'] = permutation
