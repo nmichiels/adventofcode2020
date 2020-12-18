@@ -21,8 +21,8 @@ def evaluate(expression, i):
     subexpression = ''
     while True:
         
-        if i >= len(expression):
-            return result, i, evaluate_expr_addition_first(subexpression)
+        if i >= len(expression) or expression[i] == ')':
+            return result, i+1, evaluate_expr_addition_first(subexpression)
             
         val = expression[i]
         
@@ -50,10 +50,6 @@ def evaluate(expression, i):
                 result = int(val)  #first digit
 
        
-        if val == ')':
-            return result, i+1, evaluate_expr_addition_first(subexpression)
-            
-
 
 
 sum_part1 = 0
